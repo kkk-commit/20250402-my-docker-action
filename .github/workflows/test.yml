@@ -1,0 +1,34 @@
+name: Test Custom Action
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test with default input
+        id: test-default
+        uses: ./
+        with:
+          message: "Hello, World!"
+
+      - name: Verify default output
+        run: |
+          if [[ "${{ steps.test-default.outputs.result }}" != "Processed: Hello, World" ]]; then
+            echo "Default test failed"
+            exit 1
+          fi
+
+      - name: Test with custom input
+        id: test-custom
+        uses: ./
+        with:
+          message: "Custom Message"
+
+      - name: Verify custom output
+        run: |
+          if [[ "${{ steps.test-custom.outputs.result }}" != "Processed: Custom Message" ]]; then
+            echo "Custom test failed"
+            exit 1
+          fi
